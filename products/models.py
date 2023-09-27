@@ -22,7 +22,7 @@ class Product(models.Model):
         Category, on_delete=models.DO_NOTHING, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=10)
     stock_quantity = models.PositiveBigIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

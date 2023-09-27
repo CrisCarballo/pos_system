@@ -11,7 +11,7 @@ class Sale(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.SET_NULL, null=True)
     total = models.DecimalField(max_digits=20, decimal_places=2, default=0.0)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.sale_number} {self.customer} {self.total} {self.date}"
