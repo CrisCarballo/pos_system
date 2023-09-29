@@ -1,4 +1,4 @@
-# devuelve todos los empleados
+
 from typing import Iterable
 
 from customers.models import Customer

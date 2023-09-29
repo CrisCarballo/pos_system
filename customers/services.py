@@ -12,9 +12,7 @@ def create_customer(
         address: str,
         phone_number: str,
         email: str,
-        observations: str,
-        created_at: datetime.date,
-        is_active: bool
+        observations: str
 ) -> Optional[Customer]:
     """
     La función `create_customer` crea un nuevo objeto de customer y lo
@@ -28,9 +26,7 @@ def create_customer(
             address=address,
             phone_number=phone_number,
             email=email,
-            observations=observations,
-            created_at=created_at,
-            is_active=is_active
+            observations=observations
         )
         return customer
     except Exception as err:

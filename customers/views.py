@@ -26,8 +26,6 @@ class CreateCustomerAPI(APIView):
         phone_number = serializers.CharField()
         email = serializers.EmailField()
         observations = serializers.CharField()
-        created_at = serializers.DateField()
-        is_active = serializers.BooleanField()
 
     def post(self, request):
         serializer = self.CustomerInputSerializer(data=request.data)

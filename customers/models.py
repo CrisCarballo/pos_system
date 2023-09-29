@@ -6,7 +6,7 @@ from django.db import models
 class Customer(models.Model):
 
     name = models.CharField(max_length=50)
-    lastName = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     identification_number = models.CharField(
         max_length=20, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
@@ -24,14 +24,17 @@ class Customer(models.Model):
         verbose_name_plural = "Clientes"
 
 '''
+
 {
-    "name": "",
-    "lastName": "",
-    "identification_number": "",
-    "address": "",
-    "phone_number": "",
-    "email": "",
-    "observations": "",
-    "is_active": false
+    "name": "hola",
+    "last_name": "hola",
+    "identification_number": "123123",
+    "address": "fjjfaafjop",
+    "phone_number": "2456123",
+    "email": "fjjfaafjop@cojaocj.com",
+    "observations": "jfkasjaf"
 }
+
 '''
+
+
