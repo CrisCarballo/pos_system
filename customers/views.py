@@ -11,8 +11,9 @@ from customers.services import create_customer, delete_customer, update_customer
 # Create your views here.
 
 class GetCustomerByIdAPI(APIView):
-    def get(self, request, id_customer):
-        customer = get_customer_by_id(id_customer)
+    def get(self, request):
+        id = request.query_params.get('id')
+        customer = get_customer_by_id(id)
         return Response(CustomerSerializer(customer).data)
 
 
@@ -32,7 +33,6 @@ class CreateCustomerAPI(APIView):
         email = serializers.EmailField()
         observations = serializers.CharField()
 
-
     def post(self, request):
         serializer = self.CustomerInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -45,7 +45,7 @@ class CreateCustomerAPI(APIView):
 
 class UpdateCustomerAPI(APIView):
     class CustomerInputSerializer(serializers.Serializer):
-        id_customer = serializers.IntegerField()
+        id = serializers.IntegerField()
         name = serializers.CharField()
         last_name = serializers.CharField()
         identification_number = serializers.IntegerField()
@@ -53,6 +53,7 @@ class UpdateCustomerAPI(APIView):
         phone_number = serializers.CharField()
         email = serializers.EmailField()
         observations = serializers.CharField()
+        is_active = serializers.BooleanField()
 
 
     def put(self, request):
@@ -66,8 +67,14 @@ class UpdateCustomerAPI(APIView):
     
 
 class DeleteCustomerAPI(APIView):
+    class CustomerInputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+    
     def put(self, request):
-        id_customer = request.query_params.get("id_customer")
+        serializer = self.CustomerInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         return Response(
-            delete_customer(id_customer)
+            CustomerSerializer(delete_customer(
+                **serializer.validated_data)).data
         )

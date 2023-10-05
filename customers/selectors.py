@@ -15,20 +15,20 @@ def get_all_customers() -> Iterable[Customer]:
     except Exception as err:
         print(err)
 
-def get_customer_by_id(id_customer: int) -> Customer:
+def get_customer_by_id(id: int) -> Customer:
     """
     La función `get_customer_by_id` recupera un objeto de cliente de la base de datos en función del ID
     de cliente proporcionado.
 
-    :param id_customer: El parámetro `id_customer` es un número entero que representa el ID del cliente
+    :param id: El parámetro `id` es un número entero que representa el ID del cliente
     que desea recuperar
-    :type id_customer: int
+    :type id: int
     :return: una instancia del modelo Cliente si se encuentra un cliente con el ID especificado. Si no
     se encuentra ningún cliente o si se encuentran varios clientes con el mismo ID, la función devuelve
     None.
     """
     try:
-        customer = Customer.objects.get(id=id_customer)
+        customer = Customer.objects.get(id=id)
         if customer is not None:
             return customer
     except (Customer.DoesNotExist, Customer.MultipleObjectsReturned) as err:
