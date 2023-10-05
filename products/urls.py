@@ -1,13 +1,20 @@
 from django.urls import path
 
-from customers.views import CreateCustomerAPI, GetAllCustomersAPI, GetCustomerByIdAPI, UpdateCustomerAPI
-from products.views import HelloWorldAPI
+from products.views import CreateCategoryAPI, CreateProductAPI, DeleteCategoryAPI, DeleteProductAPI, GetAllCategoriesAPI, GetAllProductsAPI, GetCategoryByIdAPI, GetProductByIdAPI, UpdateCategoryAPI, UpdateProductAPI
+
+# from products.views import
 
 urlpatterns = [
-    path('<int:id>/', HelloWorldAPI().as_view()),
-    # path('<int:id>/', GetCustomerByIdAPI().as_view()),
-    # path('all/', GetAllCustomersAPI().as_view()),
-    # path('create/', CreateCustomerAPI().as_view()),
-    # path('update/', UpdateCustomerAPI().as_view()),
-    # path('delete/', UpdateCustomerAPI().as_view()),
+    # categories
+    path('get-category/', GetCategoryByIdAPI().as_view()),
+    path('all-categories/', GetAllCategoriesAPI().as_view()),
+    path('create-category/', CreateCategoryAPI().as_view()),
+    path('update-category/', UpdateCategoryAPI().as_view()),
+    path('delete-category/<int:id>/', DeleteCategoryAPI().as_view()),
+    # products
+    path('get-product/', GetProductByIdAPI().as_view()),
+    path('all-products/', GetAllProductsAPI().as_view()),
+    path('create-product/', CreateProductAPI().as_view()),
+    path('update-product/', UpdateProductAPI().as_view()),
+    path('delete-product/', DeleteProductAPI().as_view()),
 ]

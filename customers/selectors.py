@@ -15,6 +15,7 @@ def get_all_customers() -> Iterable[Customer]:
     except Exception as err:
         print(err)
 
+
 def get_customer_by_id(id: int) -> Customer:
     """
     La función `get_customer_by_id` recupera un objeto de cliente de la base de datos en función del ID

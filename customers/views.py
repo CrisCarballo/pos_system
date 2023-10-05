@@ -2,13 +2,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers
-from rest_framework.pagination import PageNumberPagination
-from customers.selectors import get_all_customers, get_customer_by_id
 
 from customers.serializers import CustomerSerializer
+from customers.selectors import get_all_customers, get_customer_by_id
 from customers.services import create_customer, delete_customer, update_customer
 
 # Create your views here.
+
 
 class GetCustomerByIdAPI(APIView):
     def get(self, request):
@@ -55,7 +55,6 @@ class UpdateCustomerAPI(APIView):
         observations = serializers.CharField()
         is_active = serializers.BooleanField()
 
-
     def put(self, request):
         serializer = self.CustomerInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -64,12 +63,12 @@ class UpdateCustomerAPI(APIView):
             CustomerSerializer(update_customer(
                 **serializer.validated_data)).data
         )
-    
+
 
 class DeleteCustomerAPI(APIView):
     class CustomerInputSerializer(serializers.Serializer):
         id = serializers.IntegerField()
-    
+
     def put(self, request):
         serializer = self.CustomerInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

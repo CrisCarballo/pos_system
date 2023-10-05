@@ -1,4 +1,3 @@
-import datetime
 from typing import Optional
 
 from customers.models import Customer
