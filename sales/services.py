@@ -1,8 +1,10 @@
-from typing import Optional
+from typing import Iterable, Optional
 from django.db import transaction
 from django.db.models import Max
 
 from customers.models import Customer
+from inventory.models import Inventory
+from inventory.services import update_inventory
 from products.models import Product
 from sales.models import Sale, SaleDetail
 from sales.selectors import get_sale_by_id
@@ -10,7 +12,7 @@ from sales.selectors import get_sale_by_id
 
 def create_sale(
         customer_id: int,
-        sales_details: dict[SaleDetail]
+        sales_details: Iterable[SaleDetail]
 ) -> Sale:
     """
     La función `create_sale` crea un nuevo registro de venta en la base de datos con el ID del cliente y
@@ -62,6 +64,17 @@ def create_sale(
                     unit_price=float(detail_data['unit_price'])
                 )
 
+            # Actualiza el inventario disminuyendo la cantidad vendida
+                inventory_entry = Inventory.objects.filter(
+                    product=product).first()
+
+                if inventory_entry:
+                    inventory_entry.set_decrease_quantity(
+                        float(detail_data['quantity']))
+                else:
+                    raise ValueError(
+                        f"Producto no encontrado en el inventario: {product.name}")
+
             return sale
     except Exception as e:
         print(f"Error en la creación de la venta: {str(e)}")
@@ -72,11 +85,28 @@ def delete_sale(
         *,
         id: int
 ) -> Optional[Sale]:
-
+    """
+    La función `delete_sale` elimina una venta estableciendo su atributo `is_active` en False y
+    guardando los cambios.
+    
+    :param id: El parámetro "id" es un número entero que representa el identificador único de la venta
+    que debe eliminarse
+    :type id: int
+    :return: un objeto Venta si la venta se elimina correctamente, o Ninguno si hay un error.
+    """
     try:
         sale = get_sale_by_id(id)
         sale.is_active = False
         sale.save()
+
+        sales_details = SaleDetail.objects.filter(sale=sale)
+
+        # Actualizo el inventario de cada producto de la venta eliminada
+        for sale_detail in sales_details:
+            product = sale_detail.product
+            quantity = sale_detail.quantity
+            update_inventory(product, quantity, 'entrada', f"Por venta N°-{sale.sale_number} cancelada")
+
         return sale
     except Exception as err:
         print(err)

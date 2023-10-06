@@ -1,5 +1,6 @@
 
-from typing import Iterable
+from typing import Iterable, Optional
+from customers.models import Customer
 
 from sales.models import Sale, SaleDetail
 
@@ -54,3 +55,22 @@ def get_all_sales() -> Iterable[Sale]:
         return Sale.objects.all()
     except Exception as err:
         print(err)
+
+
+def get_sales_details_by_id_customer(id:int) -> Optional[Iterable[SaleDetail]]:
+    """
+    La función recupera detalles de ventas de un cliente con una identificación determinada.
+    
+    :param id: El parámetro "id" es un número entero que representa el ID de un cliente
+    :type id: int
+    :return: una colección de objetos SaleDetail que están asociados con un cliente específico.
+    """
+    try:
+        customer = Customer.objects.get(id=id)
+        sales_details = SaleDetail.objects.filter(sale__customer=customer)
+        return sales_details
+    except Customer.DoesNotExist:
+        return None
+    except Exception as e:
+        print(f"Error al obtener detalles de venta: {str(e)}")
+        return None

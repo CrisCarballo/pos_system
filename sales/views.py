@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 
 from sales.serializers import SaleCreateSerializer, SaleSerializer, SaleDetailSerializer
-from sales.selectors import get_all_sales, get_sale_detail_by_id
+from sales.selectors import get_all_sales, get_sale_detail_by_id, get_sales_details_by_id_customer
 from sales.services import create_sale, delete_sale
 
 
@@ -27,6 +27,13 @@ class GetAllSalesAPI(APIView):
     def get(self, request):
         all_sales = get_all_sales()
         return Response(SaleSerializer(all_sales, many=True).data)
+    
+
+class GetSalesDetailsByIdCustomerAPI(APIView):
+    def get(self, request):
+        customer_id = request.query_params.get('id')
+        all_sales_details = get_sales_details_by_id_customer(customer_id)
+        return Response(SaleDetailSerializer(all_sales_details, many=True).data)
 
 
 class CreateSaleAPI(APIView):

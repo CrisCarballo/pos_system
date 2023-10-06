@@ -1,4 +1,5 @@
 from typing import Optional
+from inventory.services import update_inventory
 
 from products.models import Category, Product
 from products.selectors import get_category_by_id, get_product_by_id
@@ -83,6 +84,9 @@ def create_product(
             price=price,
             stock_quantity=stock_quantity
         )
+
+        update_inventory(product, stock_quantity, 'entrada', f"Creación del producto: {product.name}")
+        
         return product
     except Exception as err:
         print(err)
@@ -113,6 +117,9 @@ def update_product(
         product.stock_quantity = stock_quantity
         product.is_active = is_active
         product.save()
+
+        update_inventory(product, stock_quantity, 'entrada', f"Creación del producto: {product.name}")
+
         return product
     except Exception as err:
         print(err)
