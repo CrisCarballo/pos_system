@@ -2,8 +2,6 @@ from django.urls import path
 
 from products.views import CreateCategoryAPI, CreateProductAPI, DeleteCategoryAPI, DeleteProductAPI, GetAllCategoriesAPI, GetAllProductsAPI, GetCategoryByIdAPI, GetProductByIdAPI, UpdateCategoryAPI, UpdateProductAPI
 
-# from products.views import
-
 urlpatterns = [
     # categories
     path('get-category/', GetCategoryByIdAPI().as_view()),
