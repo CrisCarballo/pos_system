@@ -27,9 +27,10 @@ class SaleCreateSerializer(serializers.ModelSerializer):
         model = Sale
         fields = '__all__'
 
-    # 'total' es solo lectura porque se calcula
+    # 'total' y 'sale_number' son solo lectura porque se calculan
     extra_kwargs = {
         'total': {'read_only': True},
+        'sale_number': {'read_only': True},
     }
 
 
@@ -37,8 +38,3 @@ class SaleDetailCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaleDetail
         fields = '__all__'
-
-
-class SaleWithDetailsCreateSerializer(serializers.Serializer):
-    sale = SaleCreateSerializer()
-    sale_details = SaleDetailCreateSerializer(many=True)

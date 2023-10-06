@@ -7,7 +7,7 @@ from products.models import Product
 
 
 class Sale(models.Model):
-    sale_number = models.AutoField(unique=True)
+    sale_number = models.IntegerField(unique=True)
     customer = models.ForeignKey(
         Customer, on_delete=models.SET_NULL, null=True)
     total = models.FloatField(default=0)
@@ -21,7 +21,6 @@ class Sale(models.Model):
 
     def __str__(self):
         return f"{self.sale_number} {self.customer} {self.total} {self.date}"
-
 
     class Meta:
         verbose_name = "Venta"
@@ -39,10 +38,11 @@ class Sale(models.Model):
 
 
 class SaleDetail(models.Model):
-    sale = models.ForeignKey(Sale, on_delete=models.SET_NULL, null=True, related_name='sale_detail_set')
+    sale = models.ForeignKey(
+        Sale, on_delete=models.SET_NULL, null=True, related_name='sale_detail_set')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField()
-    unit_price = models.FloatField()
+    quantity = models.PositiveIntegerField(default=0)
+    unit_price = models.FloatField(default=0)
     is_active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
@@ -52,7 +52,6 @@ class SaleDetail(models.Model):
 
     def __str__(self):
         return f"{self.product} {self.quantity} {self.unit_price}"
-
 
     class Meta:
         verbose_name = "Detalle de Venta"
@@ -65,3 +64,27 @@ class SaleDetail(models.Model):
         """
         subtotal = self.quantity * self.unit_price
         return subtotal
+
+
+'''
+{
+  "customer_id": "1", 
+  "sales_details": [
+    {
+      "product": "1",
+      "quantity": "3",
+      "unit_price": "5.99"
+    },
+    {
+      "product": "2",
+      "quantity": "1",
+      "unit_price": "50"
+    },
+    {
+      "product": "3",
+      "quantity": "10",
+      "unit_price": "20.00"
+    }
+  ]
+}
+'''

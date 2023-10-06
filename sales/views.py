@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 
 from sales.serializers import SaleCreateSerializer, SaleSerializer, SaleDetailSerializer
-from sales.selectors import get_all_sales_with_detail, get_sale_detail_by_id
+from sales.selectors import get_all_sales, get_sale_detail_by_id
 from sales.services import create_sale, delete_sale
 
 
@@ -25,21 +25,35 @@ class GetSaleByIdAPI(APIView):
 
 class GetAllSalesAPI(APIView):
     def get(self, request):
-        all_sales = get_all_sales_with_detail()
+        all_sales = get_all_sales()
         return Response(SaleSerializer(all_sales, many=True).data)
 
 
 class CreateSaleAPI(APIView):
+    class CreateSaleInputSerializer(serializers.Serializer):
+        customer_id = serializers.IntegerField()  # proporcionar solamente el id
+        sales_details = serializers.ListField()
+
     def post(self, request):
-        serializer = SaleCreateSerializer(data=request.data)
+        serializer = self.CreateSaleInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         if serializer.is_valid():
-            customer = serializer.validated_data['customer']
-            sale_details = serializer.validated_data['sale_details']
-
-            # Llama a la función del servicio para crear la venta con detalles
-            sale = create_sale(customer, sale_details)
-
-            return Response({'message': 'Sale created successfully', 'sale_id': sale.id}, status=status.HTTP_201_CREATED)
+            return Response(SaleCreateSerializer(create_sale(
+                **serializer.validated_data)).data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteSaleAPI(APIView):
+    class SaleInputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+
+    def put(self, request):
+        serializer = self.SaleInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(
+            SaleSerializer(delete_sale(
+                **serializer.validated_data)).data
+        )
